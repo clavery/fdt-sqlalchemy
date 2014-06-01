@@ -16,6 +16,9 @@ integrating with existing applications/libraries that do not use flask-sqlalchem
 extension already you do **not** need this as flask-debugtoolbar already has a panel
 for debugging queries.
 
+**IMPORTANT:** Like flask-debugtoolbar this should **not** be used in production
+environments (anywhere untrusted users can get to it).
+
 ## Install
 
 ```sh
