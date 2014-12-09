@@ -88,9 +88,10 @@ class SQLADebugPanel(DebugPanel):
     _engine = None
 
     @classmethod
-    def Configure(cls, engine, monkey_patch_debugtoolbar=True, package_names=None):
+    def Configure(cls, app, engine, monkey_patch_debugtoolbar=True, package_names=None):
         """Configure the debug panel with an engine and session
 
+        :param Flask app: flask application
         :param Engine engine: sqlalchemy Engine
         :param callable session: callable that returns a
         :param monkey_patch_debugtoolbar: replace existing SQLalchemy debug panel (default True)
@@ -106,11 +107,17 @@ class SQLADebugPanel(DebugPanel):
         cls._engine = engine
         scopefunc = _app_ctx_stack.__ident_func__
         cls._locals = ScopedRegistry(dict, scopefunc)
+
+        @app.teardown_request
+        def clear_statements(*args, **kwargs):
+            cls._locals.clear()
+
         event.listen(cls._engine, "before_cursor_execute", cls._before_cursor_execute)
         event.listen(cls._engine, "after_cursor_execute", cls._after_cursor_execute)
 
     @classmethod
     def _before_cursor_execute(cls, conn, cursor, statement, parameters, context, executemany):
+        print "IDENT", _app_ctx_stack.__ident_func__()
         cls._locals()['QUERY_TIMER'] = time.time()
 
     @classmethod
@@ -167,7 +174,6 @@ class SQLADebugPanel(DebugPanel):
 
     def content(self):
         queries = self.get_debug_queries()
-        self.__class__._locals.clear()
         template = _jinja_env.get_template('sqla.html')
         return template.render({'queries': queries})
 

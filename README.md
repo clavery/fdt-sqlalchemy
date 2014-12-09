@@ -32,7 +32,7 @@ from fdtsqlalchemy import SQLADebugPanel
 ...
 # later configure the panel *before* debug toolbar extension
 if app.debug:
-    SQLADebugPanel.Configure(engine)
+    SQLADebugPanel.Configure(app, engine)
     DebugToolbarExtension(app)
 ```
 
