@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='fdt-sqlalchemy',
-    version='0.0.2',
+    version='0.0.3',
     description='Flask-debugtoolbar configurable SQLAlchemy panel',
     author='Charles Lavery',
     author_email='charles.lavery@gmail.com',
