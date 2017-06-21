@@ -117,7 +117,6 @@ class SQLADebugPanel(DebugPanel):
 
     @classmethod
     def _before_cursor_execute(cls, conn, cursor, statement, parameters, context, executemany):
-        print "IDENT", _app_ctx_stack.__ident_func__()
         cls._locals()['QUERY_TIMER'] = time.time()
 
     @classmethod
