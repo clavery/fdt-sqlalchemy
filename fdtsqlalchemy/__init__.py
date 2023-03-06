@@ -14,6 +14,7 @@ from flask_debugtoolbar.utils import format_sql
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_debugtoolbar import module
 import itsdangerous
+import greenlet
 
 from jinja2 import Environment, PackageLoader
 
@@ -105,7 +106,7 @@ class SQLADebugPanel(DebugPanel):
             cls.package_names = []
 
         cls._engine = engine
-        scopefunc = _app_ctx_stack.__ident_func__
+        scopefunc = greenlet.getcurrent
         cls._locals = ScopedRegistry(dict, scopefunc)
 
         @app.teardown_request
